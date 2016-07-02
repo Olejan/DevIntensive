@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Глытенко Олег</string>
+    <string name="user_profile.placeholder.image">Изменить фотографию профиля</string>
+    <string name="user_profile.dialog.galary">Загрузить из галереи</string>
+    <string name="user_profile.dialog.camera">Сделать снимок</string>
+    <string name="user_profile.dialog.cancel">Отмена</string>
+    <string name="user_profile.dialog.title">Изменение изображения профиля</string>
+    <string name="user_profile.chose.message">выберите фото</string>
 </resources>
