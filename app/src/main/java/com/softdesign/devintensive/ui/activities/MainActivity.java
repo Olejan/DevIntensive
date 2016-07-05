@@ -19,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -41,10 +42,15 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -53,21 +59,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DataManager mDataManager;
     private int mCurrentEditMode=0;
 
-    private ImageView mCallImg;
-    private CoordinatorLayout mCoordinatorLayout;
-    private Toolbar mToolbar;
-    private DrawerLayout mNavigationDrawer;
-    private FloatingActionButton mFab;
-    private RelativeLayout mProfilePlaceholder;
-    private CollapsingToolbarLayout mCollapsingToolbar;
-    private AppBarLayout mAppBarLayout;
-
-    private EditText mUserPhone, mUserMail, mUserVk, mUserGit, mUserBio;
-    private List<EditText> mUserInfoViews;
+    @BindView(R.id.call_img) ImageView mCallImg;
+    @BindView(R.id.send_msg_iv) ImageView mSendMsgImg;
+    @BindView(R.id.goto_vk_iv) ImageView mGotoVkImg;
+    @BindView(R.id.goto_git_iv) ImageView mGotoGitImg;
+    @BindView(R.id.main_coordinator_container) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.navigation_drawer) DrawerLayout mNavigationDrawer;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.profile_placeholder) RelativeLayout mProfilePlaceholder;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
+    @BindView(R.id.appbar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.user_photo_img) ImageView mProfileImage;
+    @BindView(R.id.phone_et) EditText mUserPhone;
+    @BindView(R.id.mail_et) EditText mUserMail;
+    @BindView(R.id.vk_profile_et) EditText mUserVk;
+    @BindView(R.id.git_repo_et) EditText mUserGit;
+    @BindView(R.id.about_et) EditText mUserBio;
+    @BindViews({R.id.phone_et, R.id.mail_et, R.id.vk_profile_et, R.id.git_repo_et, R.id.about_et}) List<EditText> mUserInfoViews;
 
     private AppBarLayout.LayoutParams mAppBarParams = null;
 
-    private ImageView mProfileImage;
     private File mPhotoFile = null;
     private Uri mSelectedImage = null;
 
@@ -77,32 +89,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate");
 
+        ButterKnife.bind(this);
         mDataManager = DataManager.getInstance();
-        mCallImg = (ImageView) findViewById(R.id.call_img);
-        mCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_coordinator_container);
-        mToolbar = (Toolbar)findViewById(R.id.toolbar);
-        mNavigationDrawer = (DrawerLayout)findViewById(R.id.navigation_drawer);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mProfilePlaceholder = (RelativeLayout) findViewById(R.id.profile_placeholder);
         mProfilePlaceholder.setOnClickListener(this);
-        mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
-        mProfileImage = (ImageView)findViewById(R.id.user_photo_img);
-
-        mUserPhone = (EditText) findViewById(R.id.phone_et);
-        mUserMail = (EditText)findViewById(R.id.mail_et);
-        mUserVk = (EditText)findViewById(R.id.vk_profile_et);
-        mUserGit = (EditText)findViewById(R.id.git_repo_et);
-        mUserBio = (EditText)findViewById(R.id.about_et);
-
-        mUserInfoViews = new ArrayList<>();
-        mUserInfoViews.add(mUserPhone);
-        mUserInfoViews.add(mUserMail);
-        mUserInfoViews.add(mUserVk);
-        mUserInfoViews.add(mUserGit);
-        mUserInfoViews.add(mUserBio);
-
         mFab.setOnClickListener(this);
+        mCallImg.setOnClickListener(this);
+        mSendMsgImg.setOnClickListener(this);
+        mGotoVkImg.setOnClickListener(this);
+        mGotoGitImg.setOnClickListener(this);
         setupToolbar();
         setupDrawer();
         loadUserInfoValue();
@@ -136,42 +130,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart");
-    }
-
-    @Override
     public void onBackPressed() {
         if(mNavigationDrawer.isDrawerOpen(GravityCompat.START)){
             mNavigationDrawer.closeDrawer(GravityCompat.START);
@@ -184,11 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                showSnackBar("На кнопку Fab click");
-                /*showProgress();
-                runWithDelay();
-                Log.d(TAG, "onClickCallImg");*/
-
+                //showSnackBar("На кнопку Fab click");
                 if(mCurrentEditMode == 0){
                     mCurrentEditMode = 1;
                     changeEditMode(1);
@@ -201,6 +155,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //// TODO: 30.06.2016 сделать выбор, откуда загружать фото
                 showDialog(ConstantManager.LOAD_PROFILE_PHOTO);
                 break;
+            case R.id.call_img: {
+                String phone = mUserPhone.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+                startActivity(intent);
+                break;
+            }
+            case R.id.send_msg_iv: {
+                String addr = mUserMail.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+addr));
+                startActivity(Intent.createChooser(intent, "Send email..."));
+                break;
+            }
+            case R.id.goto_vk_iv: {
+                String s = mUserVk.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + s));
+                startActivity(intent);
+                break;
+            }
+            case R.id.goto_git_iv: {
+                String s = mUserGit.getText().toString();
+                    if(!s.isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+s));
+                    startActivity(intent);
+                }else{
+                    showSnackBar("Заполниете данные");
+                }
+                break;
+            }
         }
     }
 
@@ -211,7 +193,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         outState.putInt(ConstantManager.CURRENT_EDIT_MODE, mCurrentEditMode);
     }
 
-    private  void showSnackBar(String message){
+    public void showSnackBar(String message){
         Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
     /*private void runWithDelay(){
@@ -288,6 +270,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 lockToolbar();
                 //mCollapsingToolbar.setExpandedTitleColor(Color.TRANSPARENT);
             }
+            mUserPhone.setFocusableInTouchMode(true);
         }else{
             for (EditText userValue : mUserInfoViews) {
                 userValue.setEnabled(false);
