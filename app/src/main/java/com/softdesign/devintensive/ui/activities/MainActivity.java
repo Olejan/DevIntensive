@@ -3,10 +3,10 @@ package com.softdesign.devintensive.ui.activities;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,7 +19,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,9 +26,12 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -38,15 +40,17 @@ import android.widget.RelativeLayout;
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.data.managers.DataManager;
 import com.softdesign.devintensive.utils.ConstantManager;
+import com.softdesign.devintensive.utils.UserDataTextWatcher;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -83,6 +87,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private File mPhotoFile = null;
     private Uri mSelectedImage = null;
 
+    private enum EditType {Phone, Email, Vk, Git};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +106,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setupToolbar();
         setupDrawer();
         loadUserInfoValue();
+
+        //устанавливаю валидаторы
+        UserDataTextWatcher udtw1 = new UserDataTextWatcher(mUserVk, UserDataTextWatcher.Type.Vk, 0, getString(R.string.user_profile_uri_vk).length());
+        mUserVk.addTextChangedListener(udtw1);
+        UserDataTextWatcher udtw2 = new UserDataTextWatcher(mUserGit, UserDataTextWatcher.Type.Git, 0, getString(R.string.user_profile_uri_git).length());
+        mUserGit.addTextChangedListener(udtw2);
+        UserDataTextWatcher udtw3 = new UserDataTextWatcher(mUserPhone, UserDataTextWatcher.Type.Phone, 11, 20);
+        mUserPhone.addTextChangedListener(udtw3);
+
+        //здесь тоже
+        mUserPhone.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                textValidate(mUserPhone, EditType.Phone);
+                return false;
+            }
+        });
+
+        mUserMail.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                textValidate(mUserMail, EditType.Email);
+                return false;
+            }
+        });
 
         //List<String> test = mDataManager.getPreferencesManager().loadUserProfileData();
         Uri uri = mDataManager.getPreferencesManager().loadUserPhoto();
@@ -121,6 +152,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /*
+     * Валидация данных пользователя. Если не правильно - текст красным цветом
+     */
+    public void textValidate(EditText et, EditType type){
+        if(et == null)
+            return;
+        boolean result = true;
+        String str = et.getText().toString();
+        if(str.isEmpty())
+            return;
+        switch(type){
+            case Phone:
+                result = phoneValidate(str);
+                break;
+            case Email:
+                result = emailValidate(str);
+                break;
+        }
+        if(result == false)
+            et.setTextColor(getResources().getColor(R.color.red));
+        else
+            et.setTextColor(getResources().getColor(R.color.black));
+    }
+/*
+ * Валидация телефона
+ */
+    private boolean phoneValidate(String str){//проверка номера телефона
+        if(str.length() < 11 || str.length() > 20)
+            return false;
+        Pattern p = Pattern.compile(getString(R.string.phone_regexp));
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
+    /*
+    * Валидация почты
+    */
+    private boolean emailValidate(String str){//проверка email
+        char[] chars = str.trim().toCharArray();
+        String[] sd = str.split("@");
+        if(sd.length != 2)
+            return false;
+        if(sd[0].length() < 3)//имя < 3
+            return false;
+        String[] sp = sd[1].split("\\.");
+        if(sp.length < 2)
+            return false;
+        if(sp[0].length() < 2 && sp.length == 2 || sp[sp.length - 1].length() < 2)//если всего 2 части и первая < 2 или домен < 2
+            return false;
+        /*Pattern p = Pattern.compile(getString(R.string.email_regexp));
+        Matcher m = p.matcher(str);
+        return m.matches();*/
+        return true;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showToast("MainActivity restarted");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home){
@@ -137,7 +228,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.onBackPressed();
         }
     }
-
+    /*
+     * Обрабатываем нажатия кнопок
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -146,7 +239,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if(mCurrentEditMode == 0){
                     mCurrentEditMode = 1;
                     changeEditMode(1);
-                }else {
+                } else {
                     mCurrentEditMode = 0;
                     changeEditMode(0);
                 }
@@ -157,29 +250,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.call_img: {
                 String phone = mUserPhone.getText().toString();
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(getString(R.string.uri_header_tel) + phone));
                 startActivity(intent);
                 break;
             }
             case R.id.send_msg_iv: {
                 String addr = mUserMail.getText().toString();
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+addr));
-                startActivity(Intent.createChooser(intent, "Send email..."));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.uri_header_mailto)+addr));
+                startActivity(Intent.createChooser(intent, getString(R.string.text_send_email)));
                 break;
             }
             case R.id.goto_vk_iv: {
                 String s = mUserVk.getText().toString();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + s));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.uri_header_https) + s));
                 startActivity(intent);
                 break;
             }
             case R.id.goto_git_iv: {
                 String s = mUserGit.getText().toString();
                     if(!s.isEmpty()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+s));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.uri_header_https)+s));
                     startActivity(intent);
                 }else{
-                    showSnackBar("Заполниете данные");
+                    showSnackBar(getString(R.string.text_feel_data));
                 }
                 break;
             }
@@ -267,8 +360,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mFab.setImageResource(R.drawable.ic_check_black_24dp);
 
                 showProfilePlaceholder();
-                lockToolbar();
+               // lockToolbar();
                 //mCollapsingToolbar.setExpandedTitleColor(Color.TRANSPARENT);
+
+                mUserPhone.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
             mUserPhone.setFocusableInTouchMode(true);
         }else{
@@ -279,21 +376,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mFab.setImageResource(R.drawable.ic_create_black_24dp);
 
                 hideProfilePlaceholder();
-                unlockToolbar();
+               // unlockToolbar();
 
                 saveUserInfoValue();
-                //mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.white));
+                mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.white));
             }
         }
     }
-
+    /*
+     * Загружаю пользовательские анные
+     */
     private void loadUserInfoValue(){
         List<String> userData = mDataManager.getPreferencesManager().loadUserProfileData();
         for (int i = 0; i < userData.size(); i++){
             mUserInfoViews.get(i).setText(userData.get(i));
         }
     }
-
+    /*
+     * сохраняю пользовательские данные
+     */
     private void saveUserInfoValue(){
         List<String> userData = new ArrayList<>();
         for (EditText userFieldView : mUserInfoViews) {
@@ -331,7 +432,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }, ConstantManager.CAMERA_REQUEST_PERMISSION_CODE
             );
 
-            Snackbar.make(mCoordinatorLayout, "Для корректной работы приложения необходимо дать требуемые разрешения", Snackbar.LENGTH_LONG)
+            Snackbar.make(mCoordinatorLayout, getString(R.string.text_give_allow), Snackbar.LENGTH_LONG)
                     .setAction("Разрешить", new View.OnClickListener(){
                         @Override
                         public void onClick(View v){

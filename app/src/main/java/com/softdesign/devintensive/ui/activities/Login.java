@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class Login extends AppCompatActivity {
     @BindView(R.id.login_email_et) EditText mEmail;
     @BindView(R.id.login_password_et) EditText mPassword;
     @BindView(R.id.forgot_pass_tv) TextView mForgotPassword;
+    //@BindView(R.id.login_ll) LinearLayout mLl;
     //private EditText mEmail;
     //private EditText mPasword;
     private Button mEnter;
@@ -36,12 +38,24 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         ButterKnife.bind(this);
+        //mLl.bringToFront();
+
+        if(savedInstanceState != null){
+
+        }
     }
 
+    boolean DEBUG = false;
     public void onEnterClick(View view){
-        String mail = "Oleg@mail.ru".toLowerCase();
+        if(DEBUG == true){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+            return;
+        }
+        String mail = getString(R.string.login_email).toLowerCase();
         String inp_mail = mEmail.getText().toString().toLowerCase();
-        String pswrd = "assa";
+        String pswrd = getString(R.string.login_password);
         String inp_pswrd = mPassword.getText().toString();
         if(inp_mail.equals(mail) && inp_pswrd.equals(pswrd)){
             Intent intent = new Intent(this, MainActivity.class);
@@ -49,11 +63,17 @@ public class Login extends AppCompatActivity {
             this.finish();
             return;
         }else{
-            Toast.makeText(this, "Не правильно введённый Логин или Пароль\r\nПовторите попытку", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.text_wrong_password), Toast.LENGTH_LONG).show();
         }
     }
 
     public void onForgotPasswordClick(View v) {
-        Toast.makeText(this, "E-mail: Oleg@mail.ru\r\nПароль: assa", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.text_login_hint), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //Toast.makeText(this, "Login restarted", Toast.LENGTH_LONG);
     }
 }
