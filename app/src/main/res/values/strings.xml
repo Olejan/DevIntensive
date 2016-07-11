@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Глытенко Олег</string>
+    <string name="user_profile.placeholder.image">Изменить фотографию профиля</string>
+    <string name="user_profile.dialog.galary">Загрузить из галереи</string>
+    <string name="user_profile.dialog.camera">Сделать снимок</string>
+    <string name="user_profile.dialog.cancel">Отмена</string>
+    <string name="user_profile.dialog.title">Изменение изображения профиля</string>
+    <string name="user_profile.chose.message">выберите фото</string>
+    <string name="user_profile.uri.vk">vk.com/</string>
+    <string name="user_profile.uri.git">github.com/</string>
+    <string name="user_profile.uri.email"></string>
+
+    <string name="phone_regexp">^((8|\+7)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,10}$</string>
+    <string name="email_regexp">^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$</string>
+
+    <string name="uri_header.tel">tel:</string>
+    <string name="uri_header.mailto">mailto:</string>
+    <string name="uri_header.https">https://</string>
+
+    <string name="text.send_email">Send email...</string>
+    <string name="text.feel_data">Заполниете данные</string>
+    <string name="text.give_allow">Для корректной работы приложения необходимо дать требуемые разрешения</string>
+    <string name="text.wrong_password">Не правильно введённый Логин или Пароль
+Повторите попытку</string>
+    <string name="text.login.hint">E-mail: Oleg@mail.ru\r\nПароль: assa</string>
+    <string name="login.email">Oleg@mail.ru</string>
+    <string name="login.password">assa</string>
 </resources>

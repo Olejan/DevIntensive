@@ -1,9 +1,10 @@
 package com.softdesign.devintensive.data.managers;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import com.softdesign.devintensive.utils.ConstantManager;
-import com.softdesign.devintensive.utils.DevIntensiveApplication;
+import com.softdesign.devintensive.utils.DevintensiveApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class PreferencesManager {
             ConstantManager.USER_BIO_KEY};
 
     public PreferencesManager() {
-        this.mSharedPreferences = DevIntensiveApplication.getSharedPreferences();
+        this.mSharedPreferences = DevintensiveApplication.getSharedPreferences();
     }
 
     public void saveUserProfileData(List<String> userFields){
@@ -40,5 +41,16 @@ public class PreferencesManager {
         userFields.add(mSharedPreferences.getString(ConstantManager.USER_GIT_KEY, "null"));
         userFields.add(mSharedPreferences.getString(ConstantManager.USER_BIO_KEY, "null"));
         return userFields;
+    }
+
+    public void saveUserPhoto(Uri uri){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(ConstantManager.USER_PHOTO_KEY, uri.toString());
+        editor.apply();
+    }
+
+    public Uri loadUserPhoto(){
+        String str = mSharedPreferences.getString(ConstantManager.USER_PHOTO_KEY, "android.resource://com.softdesign.devintensive/drawable/userphoto.jpg");
+        return Uri.parse(str);
     }
 }

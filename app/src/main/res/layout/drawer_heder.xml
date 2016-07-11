@@ -33,7 +33,7 @@
             android:id="@+id/user_email_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="buran1td@mail.ru"
+            android:text="Oleg@mail.ru"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:fontFamily="sans-serif"/>
