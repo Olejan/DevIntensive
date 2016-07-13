@@ -26,7 +26,6 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -35,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import com.softdesign.devintensive.R;
@@ -82,6 +82,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.about_et) EditText mUserBio;
     @BindViews({R.id.phone_et, R.id.mail_et, R.id.vk_profile_et, R.id.git_repo_et, R.id.about_et}) List<EditText> mUserInfoViews;
 
+    @BindView(R.id.rating_tv) TextView mUserValueRating;
+    @BindView(R.id.strings_tv) TextView mUserValueCodeLines;
+    @BindView(R.id.projects_tv) TextView mUserValueProjects;
+    @BindViews({R.id.rating_tv, R.id.strings_tv, R.id.projects_tv}) List<TextView> mUserValueViews;
+
+    @BindView(R.id.user_email_txt) TextView mUserEmail;
+    @BindView(R.id.user_name_txt) TextView mUserName;
+    @BindView(R.id.user_avatar) ImageView mUserAvatar;/**/
+
     private AppBarLayout.LayoutParams mAppBarParams = null;
 
     private File mPhotoFile = null;
@@ -103,9 +112,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mSendMsgImg.setOnClickListener(this);
         mGotoVkImg.setOnClickListener(this);
         mGotoGitImg.setOnClickListener(this);
+
         setupToolbar();
         setupDrawer();
-        loadUserInfoValue();
+        loadUserFields();
+        initUserInfoValue();
 
         //устанавливаю валидаторы
         UserDataTextWatcher udtw1 = new UserDataTextWatcher(mUserVk, UserDataTextWatcher.Type.Vk, 0, getString(R.string.user_profile_uri_vk).length());
@@ -378,7 +389,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 hideProfilePlaceholder();
                // unlockToolbar();
 
-                saveUserInfoValue();
+                saveUserFields();
                 mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.white));
             }
         }
@@ -386,16 +397,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /*
      * Загружаю пользовательские анные
      */
-    private void loadUserInfoValue(){
+    private void loadUserFields(){
         List<String> userData = mDataManager.getPreferencesManager().loadUserProfileData();
         for (int i = 0; i < userData.size(); i++){
             mUserInfoViews.get(i).setText(userData.get(i));
+        }
+        /*List<String> names = mDataManager.getPreferencesManager().loadUserProfileName();
+        String name = names.get(0) + " " + names.get(1);
+        mUserName.setText(name);*/
+    }
+    private void initUserInfoValue(){
+        List<String> userData = mDataManager.getPreferencesManager().loadUserProfileValues();
+        for(int i = 0; i < userData.size(); i++){
+            mUserValueViews.get(i).setText(userData.get(i));
         }
     }
     /*
      * сохраняю пользовательские данные
      */
-    private void saveUserInfoValue(){
+    private void saveUserFields(){
         List<String> userData = new ArrayList<>();
         for (EditText userFieldView : mUserInfoViews) {
             userData.add(userFieldView.getText().toString());

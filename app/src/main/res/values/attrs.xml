@@ -1,0 +1,6 @@
+
+<resources>
+    <declare-styleable name="UserInfoBehavior">
+        <attr name="behavior_min_height" format="dimension"/>
+    </declare-styleable>
+</resources>
