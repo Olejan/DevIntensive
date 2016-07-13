@@ -1,13 +1,11 @@
 package com.softdesign.devintensive.ui.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +24,7 @@ public class Login extends AppCompatActivity {
 
     @BindView(R.id.login_email_et) EditText mEmail;
     @BindView(R.id.login_password_et) EditText mPassword;
-    @BindView(R.id.forgot_pass_tv) TextView mForgotPassword;
+    @BindView(R.id.remember_txt) TextView mForgotPassword;
     //@BindView(R.id.login_ll) LinearLayout mLl;
     //private EditText mEmail;
     //private EditText mPasword;

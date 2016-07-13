@@ -78,6 +78,70 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/user_info_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:background="@color/color_primary"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_behavior=".ui.behaviors.UserInfoBehavior"
+        app:behavior_min_height="56dp">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                style="@style/text_view"
+                android:id="@+id/rating_tv"
+                android:textSize="@dimen/text_size_24"
+                android:text="5"/>
+            <TextView
+                style="@style/text_view"
+                android:text="Рейтинг"/>
+        </LinearLayout>
+
+        <View style="@style/vertical_line"/>
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                style="@style/text_view"
+                android:id="@+id/strings_tv"
+                android:textSize="@dimen/text_size_24"
+                android:text="10000"/>
+            <TextView
+                style="@style/text_view"
+                android:text="Написано строк кода"/>
+        </LinearLayout>
+
+        <View style="@style/vertical_line"/>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                style="@style/text_view"
+                android:id="@+id/projects_tv"
+                android:textSize="@dimen/text_size_24"
+                android:text="5"/>
+            <TextView
+                style="@style/text_view"
+                android:text="Проектов"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <include layout="@layout/user_profile_content"/>
 
     <android.support.design.widget.FloatingActionButton

@@ -1,82 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nested_scroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior=".ui.behaviors.CustomNestedScrollBehavior"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="102dp"
-            android:orientation="horizontal"
-            android:background="@color/grey">
-
-            <LinearLayout
-                android:layout_height="match_parent"
-                android:layout_width="0px"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/text_view"
-                    android:id="@+id/rating_tv"
-                    android:textSize="@dimen/text_size_24"
-                    android:text="5"/>
-                <TextView
-                    style="@style/text_view"
-                    android:text="Рейтинг"/>
-            </LinearLayout>
-
-            <View style="@style/vertical_line"/>
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_weight="2"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/text_view"
-                    android:id="@+id/strings_tv"
-                    android:textSize="@dimen/text_size_24"
-                    android:text="10000"/>
-                <TextView
-                    style="@style/text_view"
-                    android:text="Написано строк кода"/>
-            </LinearLayout>
-
-            <View style="@style/vertical_line"/>
-
-            <LinearLayout
-                android:layout_height="match_parent"
-                android:layout_width="0px"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/text_view"
-                    android:id="@+id/projects_tv"
-                    android:textSize="@dimen/text_size_24"
-                    android:text="5"/>
-                <TextView
-                    style="@style/text_view"
-                    android:text="Проектов"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/spacing_8"
-            android:layout_marginBottom="@dimen/spacing_8">
+            android:layout_marginBottom="@dimen/spacing_8"
+            android:orientation="horizontal">
 
             <ImageView
                 style="@style/icon.left"
@@ -85,14 +26,16 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="@dimen/size_72"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="bottom"
                 android:layout_marginLeft="@dimen/size_32"
-                android:layout_marginRight="@dimen/size_16">
+                android:layout_marginRight="@dimen/size_16"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         style="@style/EditFromView"
                         android:id="@+id/phone_et"

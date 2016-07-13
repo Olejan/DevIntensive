@@ -3,12 +3,14 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="profile_img_size">256dp</dimen>
+    <dimen name="user_info_size">112dp</dimen>
 
     <!-- Text Size -->
-    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 
     <!-- Sizes -->
     <dimen name="size_8">8dp</dimen>
