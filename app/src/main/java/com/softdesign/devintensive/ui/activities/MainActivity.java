@@ -87,9 +87,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.projects_tv) TextView mUserValueProjects;
     @BindViews({R.id.rating_tv, R.id.strings_tv, R.id.projects_tv}) List<TextView> mUserValueViews;
 
-    @BindView(R.id.user_email_txt) TextView mUserEmail;
+    /*@BindView(R.id.user_email_txt) TextView mUserEmail;
     @BindView(R.id.user_name_txt) TextView mUserName;
-    @BindView(R.id.user_avatar) ImageView mUserAvatar;/**/
+    @BindView(R.id.user_avatar) ImageView mUserAvatar;*/
 
     private AppBarLayout.LayoutParams mAppBarParams = null;
 
