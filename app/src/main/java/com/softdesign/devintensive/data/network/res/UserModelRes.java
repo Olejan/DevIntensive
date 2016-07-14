@@ -1,4 +1,4 @@
-package com.softdesign.devintensive.data.network.resp;
+package com.softdesign.devintensive.data.network.res;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

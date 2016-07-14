@@ -25,4 +25,7 @@
     <string name="text.login.hint">E-mail: Oleg@mail.ru\r\nПароль: assa</string>
     <string name="login.email">Oleg@mail.ru</string>
     <string name="login.password">assa</string>
+    <string name="ff_medium">sans-serif-medium</string>
+    <string name="ff_regular">sans-serif-medium</string>
+    <string name="profile.bio.dummy">There is no doubt that robots will be a bigger part of our future. And with the rapid advances in artificial intelligence, it won\'t be long before some of us start seeing robots as individuals, with unique personalities.</string>
 </resources>
