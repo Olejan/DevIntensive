@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_72">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/size_72"
+        android:layout_centerVertical="true">
+
+        <EditText
+            style="@style/EditFromView"
+            android:id="@+id/github_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Репозиторий"
+            android:inputType="textUri"
+            android:text="github.com/Olejan/DevIntensive"
+            android:enabled="false"
+            android:focusable="false"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        style="@style/icon.right"
+        android:id="@+id/goto_git_iv"
+        android:src="@drawable/ic_visibility_black_24dp"
+        android:layout_marginRight="@dimen/size_32"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

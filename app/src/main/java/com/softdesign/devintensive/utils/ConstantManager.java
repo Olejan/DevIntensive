@@ -29,4 +29,5 @@ public interface ConstantManager {
     String USER_RATING_VALUE = "USER_RATING_VALUE";
     String USER_CODE_LINES_VALUE = "USER_CODE_LINES_VALUE";
     String USER_PROJECT_VALUE = "USER_PROJECT_VALUE";
+    String PARCELABLE_KEY = "PARCELABLE_KEY";
 }

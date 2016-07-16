@@ -1,12 +1,12 @@
 package com.softdesign.devintensive.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.data.managers.DataManager;
 import com.softdesign.devintensive.data.network.res.UserListRes;
+import com.softdesign.devintensive.data.storage.models.UserDTO;
 import com.softdesign.devintensive.ui.adapters.UsersAdapter;
 import com.softdesign.devintensive.utils.ConstantManager;
 
@@ -25,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserListActivity extends AppCompatActivity {
+public class UserListActivity extends BaseActivity {
 
     private static final String TAG = ConstantManager.TAG_PREFIX + " UserListActivity";
     private CoordinatorLayout mCoordinatorLayout;
@@ -48,7 +49,7 @@ public class UserListActivity extends AppCompatActivity {
         mNavigationDrawer = (DrawerLayout) findViewById(R.id.navigation_drawer);
         mRecycleView = (RecyclerView) findViewById(R.id.user_list);
 
-        //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecycleView.setLayoutManager(linearLayoutManager);
 
@@ -70,6 +71,7 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void loadUser() {
+        showProgress();
         Call<UserListRes> call = mDataManager.getUserList();
 
         call.enqueue(new Callback<UserListRes>() {
@@ -79,7 +81,15 @@ public class UserListActivity extends AppCompatActivity {
                 if(code == 200) {
                     try {
                         mUsers = (ArrayList<UserListRes.UserData>) response.body().getData();
-                        mUsersAdapter = new UsersAdapter(mUsers);
+                        mUsersAdapter = new UsersAdapter(mUsers, new UsersAdapter.UserViewHolder.CustomClickListener() {
+                            @Override
+                            public void onUserItemClickListener(int position) {
+                                UserDTO userDTO = new UserDTO(mUsers.get(position));
+                                Intent profileIntent = new Intent(UserListActivity.this, ProfileUserActivity.class);
+                                profileIntent.putExtra(ConstantManager.PARCELABLE_KEY, userDTO);
+                                startActivity(profileIntent);
+                            }
+                        });
                         mRecycleView.setAdapter(mUsersAdapter);
                     } catch (NullPointerException e) {
                         Log.e(TAG, e.toString());
@@ -87,12 +97,14 @@ public class UserListActivity extends AppCompatActivity {
                 }else {
                     showSnackBar("Ошибка ответа с сервера: " + String.valueOf(code));
                 }
+                hideProgress();
             }
 
             @Override
             public void onFailure(Call<UserListRes> call, Throwable t) {
                 //// TODO: обработать ошибки
                 showSnackBar(t.getMessage());
+                hideProgress();
             }
         });
     }

@@ -120,16 +120,16 @@
         </LinearLayout>
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bio_txt"
-        android:textColor="@color/grey_light"
-        android:text="@string/profile.bio.dummy"
-        android:maxLines="3"
-        android:paddingRight="@dimen/spacing_16"
-        android:paddingLeft="@dimen/spacing_16"
-        android:fontFamily="@string/ff_regular"
-        android:textSize="@dimen/text_size_14"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bio_txt"
+            android:textColor="@color/grey_light"
+            android:text="@string/profile.bio.dummy"
+            android:maxLines="3"
+            android:paddingRight="@dimen/spacing_16"
+            android:paddingLeft="@dimen/spacing_16"
+            android:fontFamily="@string/ff_regular"
+            android:textSize="@dimen/text_size_14"/>
 
         <View
             android:layout_width="match_parent"
