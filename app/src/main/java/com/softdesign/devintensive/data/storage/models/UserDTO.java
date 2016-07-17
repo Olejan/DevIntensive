@@ -3,9 +3,6 @@ package com.softdesign.devintensive.data.storage.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.softdesign.devintensive.data.network.res.UserListRes;
-import com.softdesign.devintensive.data.network.res.UserModelRes;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +16,20 @@ public class UserDTO implements Parcelable {
     private String mBio;
     private List<String> mRepositories;
 
-    public UserDTO(UserListRes.UserData userData) {
-        this.mPhoto = userData.getPublicInfo().getPhoto();
+    public UserDTO(User userData) {
+        this.mPhoto = userData.getPhoto();
         if(mPhoto == null || mPhoto.isEmpty()){
             //mPhoto =
         }
         this.mFullName = userData.getFullName();
-        this.mRating = String.valueOf(userData.getProfileValues().getRating());
-        this.mCodeLines = String.valueOf(userData.getProfileValues().getLinesCode());
-        this.mProjects = String.valueOf(userData.getProfileValues().getProjects());
-        this.mBio = userData.getPublicInfo().getBio();
+        this.mRating = String.valueOf(userData.getRating());
+        this.mCodeLines = String.valueOf(userData.getCodeLines());
+        this.mProjects = String.valueOf(userData.getProjects());
+        this.mBio = userData.getBio();
 
         List<String> repoLink = new ArrayList<>();
-        for (UserModelRes.Repo gitLink: userData.getRepositories().getRepo()) {
-            repoLink.add(gitLink.getGit());
+        for (Repository gitLink: userData.getRepositories()) {
+            repoLink.add(gitLink.getRepositoryName());
         }
         this.mRepositories = repoLink;
     }
