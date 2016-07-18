@@ -184,6 +184,7 @@
                 android:gravity="bottom"
                 android:layout_marginLeft="@dimen/size_32"
                 android:layout_marginRight="@dimen/size_16">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
