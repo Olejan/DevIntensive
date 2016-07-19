@@ -3,7 +3,6 @@ package com.softdesign.devintensive.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -21,7 +20,6 @@ import com.softdesign.devintensive.data.storage.models.Repository;
 import com.softdesign.devintensive.data.storage.models.RepositoryDao;
 import com.softdesign.devintensive.data.storage.models.User;
 import com.softdesign.devintensive.data.storage.models.UserDao;
-import com.softdesign.devintensive.utils.AppConfig;
 import com.softdesign.devintensive.utils.NetworkStatusChecker;
 
 import java.util.ArrayList;
@@ -95,14 +93,14 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         saveUserData(userModel);
         saveUserInDb();
 
-        Handler handler = new Handler();
+        /*Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent loginIntent = new Intent(AuthActivity.this, UserListActivity.class);
                 startActivity(loginIntent);
             }
-        }, AppConfig.START_DELAY);
+        }, AppConfig.START_DELAY);*/
     }
 
     private void signIn(){
@@ -163,6 +161,7 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void saveUserInDb(){
+        showProgress();
         Call<UserListRes> call = mDataManager.getUserListFromNetwork();
         call.enqueue(new Callback<UserListRes>() {
             @Override
@@ -170,30 +169,26 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
                 int code = response.code();
                 if(code == 200) {
                     try {
-                        if(response.code() == 200){
 
-                            List<Repository> allRepositories = new ArrayList<Repository>();
-                            List<User> allUsers = new ArrayList<User>();
+                        List<Repository> allRepositories = new ArrayList<Repository>();
+                        List<User> allUsers = new ArrayList<User>();
 
-                            for (UserListRes.UserData userRes : response.body().getData()) {
-                                allRepositories.addAll(getRepoListFromUserRes(userRes));
-                                allUsers.add(new User(userRes));
-                            }
-
-                            mRepositoryDao.insertOrReplaceInTx(allRepositories);
-                            mUserDao.insertOrReplaceInTx(allUsers);
-
-
-                        }else{
-                            showSnackBar("Список пользователей не может быть получен");
-                            Log.e(TAG, "onResponse: " + String.valueOf(response.errorBody().source()));
+                        for (UserListRes.UserData userRes : response.body().getData()) {
+                            allRepositories.addAll(getRepoListFromUserRes(userRes));
+                            allUsers.add(new User(userRes));
                         }
+
+                        mRepositoryDao.insertOrReplaceInTx(allRepositories);
+                        mUserDao.insertOrReplaceInTx(allUsers);
+
+                        startUsersListActivity();
+
                     } catch (NullPointerException e) {
                         Log.e(TAG, e.toString());
                         e.printStackTrace();
                         showSnackBar("Что-то пошло не так");
                     }
-                }else {
+                } else {
                     showSnackBar("Ошибка ответа с сервера: " + String.valueOf(code));
                 }
                 hideProgress();
@@ -216,5 +211,10 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
             repositories.add(new Repository(repositoryRes, userId));
         }
         return repositories;
+    }
+
+    private void startUsersListActivity(){
+        Intent loginIntent = new Intent(AuthActivity.this, UserListActivity.class);
+        startActivity(loginIntent);
     }
 }

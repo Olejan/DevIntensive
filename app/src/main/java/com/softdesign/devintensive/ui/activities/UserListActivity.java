@@ -144,7 +144,12 @@ public class UserListActivity extends BaseActivity {
                 showUsers(mDataManager.getUserListByName(mQuery));
             }
         };
-        mHandler.removeCallbacks(searchUser);
-        mHandler.postDelayed(searchUser, ConstantManager.SEARCH_DELAY);
+        if(query.isEmpty()){
+            mHandler.removeCallbacks(searchUser);
+            showUsers(mDataManager.getUserListByName(mQuery));
+        }else {
+            mHandler.removeCallbacks(searchUser);
+            mHandler.postDelayed(searchUser, ConstantManager.SEARCH_DELAY);
+        }
     }
 }
